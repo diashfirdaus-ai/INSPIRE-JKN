@@ -143,169 +143,212 @@ function initCharts() {
     });
 }
 
-// ===== INBOX SIMULATOR LOGIC =====
-const mockComplaints = [
-    { id: "C-1042", source: "Twitter", sourceClass: "twitter", text: "Suami baru kena PHK bulan lalu, jadi bulan ini sekeluarga terpaksa nunggak BPJS dulu karena buat makan aja susah. Mohon pengertiannya." },
-    { id: "C-1043", source: "LAPOR!", sourceClass: "lapor", text: "Tolong dong aplikasi mobile JKN diperbaiki! Saya mau bayar tunggakan malah muter-muter aja di halaman login. Ribet banget antarmukanya bikin pusing." },
-    { id: "C-1044", source: "App Store", sourceClass: "appstore", text: "Udah 3 hari coba bayar JKN lewat m-banking gagal terus. Error terus di gateway pembayaran. Padahal lagi butuh buat berobat besok." },
-    { id: "C-1045", source: "Twitter", sourceClass: "twitter", text: "Saya sudah 5 bulan tidak membayar iuran karena lupa dan tidak ada yang mengingatkan. Baru tahu kalau ada program cicilan." }
-];
-
-let analyzedResults = {};
-
-function initSimulator() {
-    const tbody = document.getElementById('complaintsBody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
-    
-    mockComplaints.forEach((comp) => {
-        const tr = document.createElement('tr');
-        tr.id = `row-${comp.id}`;
-        tr.innerHTML = `
-            <td><strong>${comp.id}</strong></td>
-            <td><span class="source-badge ${comp.sourceClass}">${comp.source}</span></td>
-            <td>${comp.text}</td>
-            <td id="status-${comp.id}"><span class="status-badge status-pending">Menunggu...</span></td>
-            <td id="rec-${comp.id}"><span style="color:var(--sl400);font-style:italic;">Belum Dianalisis</span></td>
-            <td id="action-${comp.id}">
-                <button class="btn-execute" style="opacity:0.5;cursor:not-allowed;" disabled><i class="fas fa-play"></i> Eksekusi</button>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
+// ===== LLM EXAMPLE CHIPS =====
+function fillExample(type) {
+    const examples = {
+        1: "Suami baru kena PHK bulan lalu, jadi bulan ini sekeluarga terpaksa nunggak BPJS dulu karena buat makan aja susah. Mohon pengertiannya.",
+        2: "Tolong dong aplikasi mobile JKN diperbaiki! Saya mau bayar tunggakan malah muter-muter aja di halaman login. Ribet banget antarmukanya bikin pusing.",
+        3: "Udah 3 hari coba bayar JKN lewat m-banking gagal terus. Error terus di gateway pembayaran. Padahal lagi butuh buat berobat besok."
+    };
+    document.getElementById('llmInput').value = examples[type] || '';
 }
 
-// Initialize on page load if simulator exists
-document.addEventListener("DOMContentLoaded", () => {
-    initSimulator();
-});
-
-async function analyzeAll() {
-    const btn = document.getElementById('btnAnalyzeAll');
-    if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = `<div class="spinner-small" style="display:inline-block;vertical-align:middle;margin-right:6px;border-width:2px;width:14px;height:14px;"></div> Menganalisis...`;
-    }
+// ===== LLM ANALYZE FUNCTION (SINGLE) =====
+async function analyzeText() {
+    const inputText = document.getElementById('llmInput').value.trim();
+    if (!inputText) { showToast("Silakan masukkan teks keluhan terlebih dahulu."); return; }
 
     if (!GEMINI_CONFIG.useServerless && (!GEMINI_CONFIG.apiKey || GEMINI_CONFIG.apiKey.trim() === '')) {
         showToast("API Key Gemini belum diisi. Buka file config.js dan isi API Key Anda.");
-        if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = `<i class="fas fa-bolt"></i> Analisis Semua (AI)`;
-        }
         return;
     }
 
-    // Process all complaints in parallel
-    const promises = mockComplaints.map(comp => analyzeSingle(comp));
-    await Promise.all(promises);
+    // Set loading state
+    document.getElementById('resultOverlay').style.display = 'none';
+    document.getElementById('btnAnalyze').disabled = true;
+    document.getElementById('loadingIndicator').style.display = 'flex';
+    document.getElementById('loadingText').textContent = "LLM sedang memproses...";
+    document.getElementById('actionBtnContainer').style.display = 'none';
+    ['outDeterminan', 'outSentimen', 'outAlasan', 'outRekomendasi'].forEach(id => {
+        document.getElementById(id).textContent = '...';
+    });
 
-    if (btn) {
-        btn.innerHTML = `<i class="fas fa-check"></i> Selesai Dianalisis`;
-        btn.style.background = 'var(--em600)';
+    try {
+        const resultText = await callGeminiAPI(inputText);
+        updateResultUI(JSON.parse(resultText));
+    } catch (error) {
+        console.error('LLM Error:', error);
+        showToast("Error: " + error.message);
+        document.getElementById('resultOverlay').style.display = 'flex';
+    } finally {
+        document.getElementById('btnAnalyze').disabled = false;
+        document.getElementById('loadingIndicator').style.display = 'none';
     }
 }
 
-async function analyzeSingle(complaint) {
-    const systemPrompt = `Anda adalah analis data senior di BPJS Kesehatan (JKN). Tugas Anda membaca teks keluhan dari peserta dan mengekstrak informasi.
-Klasifikasikan determinan menjadi: [Ekonomi, Teknis Aplikasi, Gateway Pembayaran, Administratif, Lainnya].
+// ===== CALL GEMINI API =====
+async function callGeminiAPI(text) {
+    const systemPrompt = `Anda adalah analis data senior di BPJS Kesehatan (JKN). Tugas Anda membaca teks keluhan dari peserta dan mengekstrak informasi spesifik.
+Klasifikasikan determinan penunggakan menjadi: [Ekonomi, Teknis Aplikasi, Gateway Pembayaran, Administratif, Lainnya].
 Sentimen: [Positif, Netral, Negatif].
-Rekomendasi_aksi berupa tindakan sistem otomatis singkat.`;
+Tuliskan alasan_tersembunyi secara ringkas (maks 2 kalimat).
+Tuliskan rekomendasi_aksi berupa tindakan sistem otomatis yang spesifik.`;
 
     const responseSchema = {
         type: "OBJECT",
         properties: {
             determinan: { type: "STRING" },
             sentimen: { type: "STRING" },
+            alasan_tersembunyi: { type: "STRING" },
             rekomendasi_aksi: { type: "STRING" }
         },
-        required: ["determinan", "sentimen", "rekomendasi_aksi"]
+        required: ["determinan", "sentimen", "alasan_tersembunyi", "rekomendasi_aksi"]
     };
 
-    let payload;
-    if (GEMINI_CONFIG.useServerless) {
-        payload = { prompt: complaint.text, systemInstruction: systemPrompt, responseSchema: responseSchema };
-    } else {
-        payload = {
-            contents: [{ parts: [{ text: complaint.text }] }],
+    let payload = GEMINI_CONFIG.useServerless 
+        ? { prompt: text, systemInstruction: systemPrompt, responseSchema: responseSchema }
+        : {
+            contents: [{ parts: [{ text: text }] }],
             systemInstruction: { parts: [{ text: systemPrompt }] },
             generationConfig: { responseMimeType: "application/json", responseSchema: responseSchema }
-        };
-    }
+          };
 
     const apiUrl = typeof GEMINI_CONFIG.apiUrl === 'function' ? GEMINI_CONFIG.apiUrl() : GEMINI_CONFIG.apiUrl;
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
 
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        
-        const result = await response.json();
-        let resultText = '';
-        if (GEMINI_CONFIG.useServerless) {
-            resultText = result.text;
-        } else {
-            resultText = result.candidates[0].content.parts[0].text;
-        }
-
-        const data = JSON.parse(resultText);
-        analyzedResults[complaint.id] = data;
-        updateRowUI(complaint.id, data);
-    } catch (error) {
-        console.error('LLM Error for ' + complaint.id, error);
-        document.getElementById(`status-${complaint.id}`).innerHTML = `<span class="status-badge" style="background:#fee2e2;color:#dc2626;">Error</span>`;
+    if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error?.message || errData.error || `HTTP ${response.status}`);
     }
+
+    const result = await response.json();
+    if (GEMINI_CONFIG.useServerless) return result.text;
+    return result.candidates[0].content.parts[0].text;
 }
 
-function updateRowUI(id, data) {
-    const detColor = getDeterminanColor(data.determinan);
+// ===== UPDATE RESULT UI (SINGLE) =====
+function updateResultUI(data) {
+    const det = (data.determinan || '').toLowerCase();
+    let detColor = 'var(--sl800)';
+    if (det.includes('ekonomi')) detColor = '#dc2626';
+    else if (det.includes('teknis') || det.includes('aplikasi')) detColor = '#2563eb';
+    else if (det.includes('gateway')) detColor = '#d97706';
+    else if (det.includes('administ')) detColor = '#7c3aed';
+
+    document.getElementById('outDeterminan').style.color = detColor;
+    document.getElementById('outDeterminan').textContent = data.determinan;
+
+    const s = (data.sentimen || '').toLowerCase();
+    const icon = s === 'negatif' ? '😞 ' : s === 'positif' ? '😊 ' : '😐 ';
+    document.getElementById('outSentimen').textContent = icon + data.sentimen;
+    document.getElementById('outAlasan').textContent = '"' + data.alasan_tersembunyi + '"';
+    document.getElementById('outRekomendasi').textContent = data.rekomendasi_aksi;
     
-    document.getElementById(`status-${id}`).innerHTML = `
-        <span class="status-badge status-analyzed">Selesai</span><br>
-        <strong style="color:${detColor};font-size:0.8rem;">${data.determinan}</strong><br>
-        <span style="font-size:0.75rem;color:var(--sl500);">Sentimen: ${data.sentimen}</span>
-    `;
-    
-    document.getElementById(`rec-${id}`).innerHTML = `
-        <div style="font-size:0.85rem;color:#065f46;font-weight:600;background:var(--em50);padding:8px;border-radius:6px;border:1px solid var(--em200);">
-            ${data.rekomendasi_aksi}
-        </div>
-    `;
-
-    document.getElementById(`action-${id}`).innerHTML = `
-        <button class="btn-execute" id="btn-exec-${id}" onclick="executeAction('${id}')">
-            <i class="fas fa-play"></i> Eksekusi
-        </button>
-    `;
+    // Reset and show action button
+    const btn = document.getElementById('btn-exec-single');
+    if (btn) {
+        btn.disabled = false;
+        btn.classList.remove('loading', 'success');
+        btn.innerHTML = `<i class="fas fa-play"></i> Eksekusi Rekomendasi`;
+    }
+    document.getElementById('actionBtnContainer').style.display = 'block';
 }
 
-function getDeterminanColor(det) {
-    det = (det || '').toLowerCase();
-    if (det.includes('ekonomi')) return '#dc2626';
-    if (det.includes('teknis') || det.includes('aplikasi')) return '#2563eb';
-    if (det.includes('gateway')) return '#d97706';
-    if (det.includes('administ')) return '#7c3aed';
-    return 'var(--sl800)';
-}
-
-function executeAction(id) {
-    const btn = document.getElementById(`btn-exec-${id}`);
+function executeActionSingle() {
+    const btn = document.getElementById('btn-exec-single');
     if (!btn) return;
 
     btn.disabled = true;
     btn.classList.add('loading');
     btn.innerHTML = `<div class="spinner-small" style="display:inline-block;vertical-align:middle;margin-right:6px;"></div> Proses...`;
 
-    // Simulate execution time
     setTimeout(() => {
         btn.classList.remove('loading');
         btn.classList.add('success');
         btn.innerHTML = `<i class="fas fa-check"></i> Dieksekusi`;
+        showToast("Tindakan otomatis berhasil dieksekusi!");
     }, 1500 + Math.random() * 1000);
+}
+
+// ===== CSV BATCH PROCESSING =====
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (!GEMINI_CONFIG.useServerless && (!GEMINI_CONFIG.apiKey || GEMINI_CONFIG.apiKey.trim() === '')) {
+        showToast("API Key Gemini belum diisi. Buka file config.js dan isi API Key Anda.");
+        event.target.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        const text = e.target.result;
+        await processCSV(text);
+        event.target.value = ''; // reset file input
+    };
+    reader.readAsText(file);
+}
+
+async function processCSV(csvText) {
+    // Simple CSV parser
+    const lines = csvText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+    if (lines.length === 0) {
+        showToast("CSV kosong atau tidak valid.");
+        return;
+    }
+
+    // Skip header if it exists
+    let dataLines = lines;
+    if (lines[0].toLowerCase().includes('text') || lines[0].toLowerCase().includes('keluhan')) {
+        dataLines = lines.slice(1);
+    }
+
+    if (dataLines.length === 0) {
+        showToast("Tidak ada data keluhan yang ditemukan di CSV.");
+        return;
+    }
+
+    document.getElementById('loadingIndicator').style.display = 'flex';
+    document.getElementById('btnAnalyze').disabled = true;
+    
+    let resultsCSV = "Teks Keluhan,Determinan,Sentimen,Alasan Tersembunyi,Rekomendasi Aksi\\n";
+    
+    for (let i = 0; i < dataLines.length; i++) {
+        document.getElementById('loadingText').textContent = \`Memproses data \${i+1} dari \${dataLines.length}...\`;
+        
+        let text = dataLines[i];
+        if (text.startsWith('"') && text.endsWith('"')) text = text.substring(1, text.length - 1);
+        
+        try {
+            const resultText = await callGeminiAPI(text);
+            const data = JSON.parse(resultText);
+            
+            const escapeCSV = (str) => '"' + (str || '').replace(/"/g, '""') + '"';
+            resultsCSV += \`\${escapeCSV(text)},\${escapeCSV(data.determinan)},\${escapeCSV(data.sentimen)},\${escapeCSV(data.alasan_tersembunyi)},\${escapeCSV(data.rekomendasi_aksi)}\\n\`;
+        } catch (error) {
+            console.error(\`Error processing line \${i+1}:\`, error);
+            resultsCSV += \`"\${text}","ERROR","ERROR","ERROR","ERROR"\\n\`;
+        }
+    }
+
+    // Trigger Download
+    const blob = new Blob([resultsCSV], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "hasil_analisis_jkn.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    document.getElementById('loadingIndicator').style.display = 'none';
+    document.getElementById('btnAnalyze').disabled = false;
+    showToast(\`Batch analisis selesai! File hasil_analisis_jkn.csv telah diunduh.\`);
 }
 
 // ===== TOAST NOTIFICATION =====

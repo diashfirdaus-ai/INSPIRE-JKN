@@ -350,35 +350,73 @@
 <!-- SIMULATOR PAGE                                                -->
 <!-- ============================================================ -->
 <section id="simulator-page" class="page-section">
-    <div class="dashboard-header">
+    <div class="dashboard-header" style="margin-bottom: 32px;">
         <div class="dashboard-header-inner">
             <div>
-                <h1 class="dashboard-title">Sistem Antrean Keluhan (Inbox)</h1>
-                <p class="dashboard-subtitle">Platform operasional CS dengan ekstraksi otomatis Gemini AI</p>
+                <h1 class="dashboard-title">Simulator Ekstraksi LLM</h1>
+                <p class="dashboard-subtitle">Platform analitik teks cerdas dengan Google Gemini AI</p>
             </div>
-            <button class="btn-primary" onclick="analyzeAll()" id="btnAnalyzeAll">
-                <i class="fas fa-bolt"></i> Analisis Semua (AI)
-            </button>
+            <span class="powered-badge" style="align-self: flex-end; margin-bottom: 8px;"><i class="fas fa-bolt"></i> Powered by Gemini AI</span>
         </div>
     </div>
 
     <div class="dashboard-body">
-        <div class="table-container">
-            <table class="data-table" id="complaintsTable">
-                <thead>
-                    <tr>
-                        <th width="5%">ID</th>
-                        <th width="10%">Sumber</th>
-                        <th width="35%">Teks Keluhan</th>
-                        <th width="15%">Status & Determinan</th>
-                        <th width="20%">Rekomendasi Aksi</th>
-                        <th width="15%">Tindakan</th>
-                    </tr>
-                </thead>
-                <tbody id="complaintsBody">
-                    <!-- Rows will be injected by JS -->
-                </tbody>
-            </table>
+        <div class="llm-section">
+            <div class="llm-header">
+                <div class="llm-header-title">
+                    <div class="llm-header-icon"><i class="fas fa-robot"></i></div>
+                    Mode Input Manual & Batch CSV
+                </div>
+            </div>
+            <div class="llm-body">
+                <!-- Input -->
+                <div>
+                    <div class="llm-label">Input Teks Keluhan / Cuitan</div>
+                    <textarea id="llmInput" class="llm-textarea" rows="6" placeholder="Masukkan teks keluhan peserta JKN di sini..."></textarea>
+                    <div class="example-chips">
+                        <div class="example-chip" onclick="fillExample(1)"><i class="fas fa-tag"></i> Contoh 1 (Ekonomi)</div>
+                        <div class="example-chip" onclick="fillExample(2)"><i class="fas fa-tag"></i> Contoh 2 (Teknis)</div>
+                        <div class="example-chip" onclick="fillExample(3)"><i class="fas fa-tag"></i> Contoh 3 (Gateway)</div>
+                    </div>
+                    
+                    <!-- NEW UPLOAD FEATURE -->
+                    <div class="upload-section" style="margin-top:16px;">
+                        <input type="file" id="csvFile" accept=".csv" style="display:none;" onchange="handleFileUpload(event)">
+                        <button class="btn-secondary" onclick="document.getElementById('csvFile').click()" style="width:100%; border:1px dashed var(--em500); color:var(--em600); background:var(--em50); padding:10px; border-radius:12px; cursor:pointer; font-weight:600; font-size:0.85rem; display:flex; align-items:center; justify-content:center; gap:8px;">
+                            <i class="fas fa-file-csv"></i> Upload CSV untuk Analisis Batch
+                        </button>
+                    </div>
+
+                    <button id="btnAnalyze" class="analyze-btn" onclick="analyzeText()">
+                        <i class="fas fa-bolt"></i> Analisis &amp; Ekstrak Insight
+                    </button>
+                    <div id="loadingIndicator" style="display:none;align-items:center;gap:10px;justify-content:center;margin-top:12px;color:var(--em600);font-size:0.875rem;font-weight:600;">
+                        <div class="loader-spin"></div> <span id="loadingText">LLM sedang memproses...</span>
+                    </div>
+                </div>
+                <!-- Output -->
+                <div style="position:relative;">
+                    <div class="llm-label">Hasil Ekstraksi &amp; Rekomendasi Aksi</div>
+                    <div id="resultOverlay" class="result-overlay">
+                        <div class="result-overlay-text">
+                            <i class="fas fa-wand-magic-sparkles"></i>
+                            <p style="font-size:0.875rem;" id="resultOverlayText">Klik Analisis untuk melihat<br>hasil ekstraksi LLM</p>
+                        </div>
+                    </div>
+                    <div class="result-grid">
+                        <div class="result-box"><div class="result-box-label">Kategori Determinan</div><div id="outDeterminan" class="result-box-value">—</div></div>
+                        <div class="result-box"><div class="result-box-label">Sentimen Pelanggan</div><div id="outSentimen" class="result-box-value">—</div></div>
+                    </div>
+                    <div class="result-box" style="margin-bottom:12px;"><div class="result-box-label">Alasan Tersembunyi (Latent Reason)</div><p id="outAlasan" style="font-size:0.875rem;color:var(--sl600);line-height:1.6;font-style:italic;margin-top:4px;">—</p></div>
+                    <div class="result-action-box">
+                        <div class="result-action-header"><div class="check-circle"><i class="fas fa-check"></i></div><span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#065f46;">Trigger Tindakan Otomatis</span></div>
+                        <p id="outRekomendasi" style="font-size:0.875rem;color:#065f46;font-weight:600;line-height:1.5;">—</p>
+                        <div id="actionBtnContainer" style="display:none;margin-top:12px;">
+                            <button id="btn-exec-single" class="btn-execute" onclick="executeActionSingle()"><i class="fas fa-play"></i> Eksekusi Rekomendasi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section><!-- end #simulator-page -->
