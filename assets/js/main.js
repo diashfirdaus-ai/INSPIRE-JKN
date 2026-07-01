@@ -1,5 +1,5 @@
 // ============================================================
-// Insight-JKN - Main JavaScript
+// Inspire-JKN - Main JavaScript
 // Requires: config.js (for GEMINI_CONFIG)
 // ============================================================
 
