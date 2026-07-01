@@ -203,24 +203,24 @@ function renderHistory() {
         }
 
         const tr = document.createElement('tr');
-        tr.innerHTML = \`
-            <td style="font-size:0.8rem;">\${item.text}</td>
-            <td><strong style="color:\${detColor};font-size:0.8rem;">\${item.determinan}</strong></td>
-            <td style="font-size:0.8rem;">\${icon} \${item.sentimen}</td>
-            <td style="font-size:0.8rem;color:#065f46;">\${item.rekomendasi}</td>
-            <td id="hist-action-\${item.id}">\${actionHtml}</td>
-        \`;
+        tr.innerHTML = `
+            <td style="font-size:0.8rem;">${item.text}</td>
+            <td><strong style="color:${detColor};font-size:0.8rem;">${item.determinan}</strong></td>
+            <td style="font-size:0.8rem;">${icon} ${item.sentimen}</td>
+            <td style="font-size:0.8rem;color:#065f46;">${item.rekomendasi}</td>
+            <td id="hist-action-${item.id}">${actionHtml}</td>
+        `;
         tbody.appendChild(tr);
     });
 }
 
 function executeHistoryAction(id, rekomendasi) {
-    const btn = document.getElementById(\`btn-hist-\${id}\`);
+    const btn = document.getElementById(`btn-hist-${id}`);
     if (!btn) return;
     
     btn.disabled = true;
     btn.classList.add('loading');
-    btn.innerHTML = \`<div class="spinner-small" style="display:inline-block;vertical-align:middle;margin-right:6px;"></div>...\`;
+    btn.innerHTML = `<div class="spinner-small" style="display:inline-block;vertical-align:middle;margin-right:6px;"></div>...`;
 
     const modal = document.getElementById('execModal');
     const modalBody = document.getElementById('execModalBody');
@@ -229,11 +229,11 @@ function executeHistoryAction(id, rekomendasi) {
         modalBody.innerHTML = '';
         
         const steps = [
-            \`> Memulai inisialisasi API eksternal...\`,
-            \`> Payload: { action: "\${rekomendasi}" }\`,
-            \`> Mengirim instruksi ke backend system...\`,
-            \`<span class="status-warn">> Menunggu konfirmasi dari server (auth_token verified)...</span>\`,
-            \`<span class="status-ok">> [200 OK] Sukses! Tindakan otomatis berhasil diterapkan.</span>\`
+            `> Memulai inisialisasi API eksternal...`,
+            `> Payload: { action: "${rekomendasi}" }`,
+            `> Mengirim instruksi ke backend system...`,
+            `<span class="status-warn">> Menunggu konfirmasi dari server (auth_token verified)...</span>`,
+            `<span class="status-ok">> [200 OK] Sukses! Tindakan otomatis berhasil diterapkan.</span>`
         ];
 
         let delay = 0;
