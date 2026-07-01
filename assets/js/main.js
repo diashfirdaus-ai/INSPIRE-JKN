@@ -316,10 +316,10 @@ async function processCSV(csvText) {
     document.getElementById('loadingIndicator').style.display = 'flex';
     document.getElementById('btnAnalyze').disabled = true;
     
-    let resultsCSV = "Teks Keluhan,Determinan,Sentimen,Alasan Tersembunyi,Rekomendasi Aksi\\n";
+    let resultsCSV = "Teks Keluhan,Determinan,Sentimen,Alasan Tersembunyi,Rekomendasi Aksi\n";
     
     for (let i = 0; i < dataLines.length; i++) {
-        document.getElementById('loadingText').textContent = \`Memproses data \${i+1} dari \${dataLines.length}...\`;
+        document.getElementById('loadingText').textContent = `Memproses data ${i+1} dari ${dataLines.length}...`;
         
         let text = dataLines[i];
         if (text.startsWith('"') && text.endsWith('"')) text = text.substring(1, text.length - 1);
@@ -329,10 +329,10 @@ async function processCSV(csvText) {
             const data = JSON.parse(resultText);
             
             const escapeCSV = (str) => '"' + (str || '').replace(/"/g, '""') + '"';
-            resultsCSV += \`\${escapeCSV(text)},\${escapeCSV(data.determinan)},\${escapeCSV(data.sentimen)},\${escapeCSV(data.alasan_tersembunyi)},\${escapeCSV(data.rekomendasi_aksi)}\\n\`;
+            resultsCSV += `${escapeCSV(text)},${escapeCSV(data.determinan)},${escapeCSV(data.sentimen)},${escapeCSV(data.alasan_tersembunyi)},${escapeCSV(data.rekomendasi_aksi)}\n`;
         } catch (error) {
-            console.error(\`Error processing line \${i+1}:\`, error);
-            resultsCSV += \`"\${text}","ERROR","ERROR","ERROR","ERROR"\\n\`;
+            console.error(`Error processing line ${i+1}:`, error);
+            resultsCSV += `"${text}","ERROR","ERROR","ERROR","ERROR"\n`;
         }
     }
 
@@ -348,7 +348,7 @@ async function processCSV(csvText) {
 
     document.getElementById('loadingIndicator').style.display = 'none';
     document.getElementById('btnAnalyze').disabled = false;
-    showToast(\`Batch analisis selesai! File hasil_analisis_jkn.csv telah diunduh.\`);
+    showToast(`Batch analisis selesai! File hasil_analisis_jkn.csv telah diunduh.`);
 }
 
 // ===== TOAST NOTIFICATION =====
