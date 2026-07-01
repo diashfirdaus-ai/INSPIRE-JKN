@@ -153,6 +153,119 @@ function fillExample(type) {
     document.getElementById('llmInput').value = examples[type] || '';
 }
 
+let simulatorHistory = [];
+let currentSingleId = null;
+
+function addToHistory(text, data) {
+    const id = Date.now() + Math.floor(Math.random() * 1000);
+    const item = {
+        id: id,
+        text: text,
+        determinan: data.determinan,
+        sentimen: data.sentimen,
+        rekomendasi: data.rekomendasi_aksi,
+        status: 'pending'
+    };
+    simulatorHistory.unshift(item); // prepend
+    renderHistory();
+    return id;
+}
+
+function renderHistory() {
+    const section = document.getElementById('historySection');
+    const tbody = document.getElementById('historyBody');
+    if (!section || !tbody) return;
+    
+    if (simulatorHistory.length === 0) {
+        section.style.display = 'none';
+        return;
+    }
+    
+    section.style.display = 'block';
+    tbody.innerHTML = '';
+    
+    simulatorHistory.forEach(item => {
+        let detColor = 'var(--sl800)';
+        const det = (item.determinan || '').toLowerCase();
+        if (det.includes('ekonomi')) detColor = '#dc2626';
+        else if (det.includes('teknis') || det.includes('aplikasi')) detColor = '#2563eb';
+        else if (det.includes('gateway')) detColor = '#d97706';
+        else if (det.includes('administ')) detColor = '#7c3aed';
+
+        const s = (item.sentimen || '').toLowerCase();
+        const icon = s === 'negatif' ? '😞 ' : s === 'positif' ? '😊 ' : '😐 ';
+
+        let actionHtml = '';
+        if (item.status === 'executed') {
+            actionHtml = `<span style="display:inline-flex;align-items:center;gap:6px;color:#10b981;font-weight:600;font-size:0.8rem;"><i class="fas fa-check-circle"></i> Dieksekusi</span>`;
+        } else {
+            actionHtml = `<button class="btn-execute" id="btn-hist-${item.id}" onclick="executeHistoryAction(${item.id}, '${(item.rekomendasi || '').replace(/'/g, "\\'")}')" style="padding:6px 12px;font-size:0.75rem;"><i class="fas fa-play"></i> Eksekusi</button>`;
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = \`
+            <td style="font-size:0.8rem;">\${item.text}</td>
+            <td><strong style="color:\${detColor};font-size:0.8rem;">\${item.determinan}</strong></td>
+            <td style="font-size:0.8rem;">\${icon} \${item.sentimen}</td>
+            <td style="font-size:0.8rem;color:#065f46;">\${item.rekomendasi}</td>
+            <td id="hist-action-\${item.id}">\${actionHtml}</td>
+        \`;
+        tbody.appendChild(tr);
+    });
+}
+
+function executeHistoryAction(id, rekomendasi) {
+    const btn = document.getElementById(\`btn-hist-\${id}\`);
+    if (!btn) return;
+    
+    btn.disabled = true;
+    btn.classList.add('loading');
+    btn.innerHTML = \`<div class="spinner-small" style="display:inline-block;vertical-align:middle;margin-right:6px;"></div>...\`;
+
+    const modal = document.getElementById('execModal');
+    const modalBody = document.getElementById('execModalBody');
+    if(modal && modalBody) {
+        modal.classList.add('show');
+        modalBody.innerHTML = '';
+        
+        const steps = [
+            \`> Memulai inisialisasi API eksternal...\`,
+            \`> Payload: { action: "\${rekomendasi}" }\`,
+            \`> Mengirim instruksi ke backend system...\`,
+            \`<span class="status-warn">> Menunggu konfirmasi dari server (auth_token verified)...</span>\`,
+            \`<span class="status-ok">> [200 OK] Sukses! Tindakan otomatis berhasil diterapkan.</span>\`
+        ];
+
+        let delay = 0;
+        steps.forEach((step, index) => {
+            delay += 600 + (Math.random() * 400);
+            setTimeout(() => {
+                const div = document.createElement('div');
+                div.className = 'exec-modal-step';
+                div.innerHTML = step;
+                modalBody.appendChild(div);
+                void div.offsetWidth;
+                div.classList.add('show');
+                modalBody.scrollTop = modalBody.scrollHeight;
+
+                if (index === steps.length - 1) {
+                    const item = simulatorHistory.find(x => x.id === id);
+                    if (item) item.status = 'executed';
+                    renderHistory();
+                    showToast("Tindakan otomatis berhasil dieksekusi!");
+                }
+            }, delay);
+        });
+    } else {
+        setTimeout(() => {
+            const item = simulatorHistory.find(x => x.id === id);
+            if (item) item.status = 'executed';
+            renderHistory();
+            showToast("Tindakan otomatis berhasil dieksekusi!");
+        }, 1500 + Math.random() * 1000);
+    }
+}
+
 // ===== LLM ANALYZE FUNCTION (SINGLE) =====
 async function analyzeText() {
     const inputText = document.getElementById('llmInput').value.trim();
@@ -175,7 +288,9 @@ async function analyzeText() {
 
     try {
         const resultText = await callGeminiAPI(inputText);
-        updateResultUI(JSON.parse(resultText));
+        const data = JSON.parse(resultText);
+        updateResultUI(data);
+        currentSingleId = addToHistory(inputText, data);
     } catch (error) {
         console.error('LLM Error:', error);
         showToast("Error: " + error.message);
@@ -304,6 +419,12 @@ function executeActionSingle() {
                     btn.classList.remove('loading');
                     btn.classList.add('success');
                     btn.innerHTML = `<i class="fas fa-check"></i> Dieksekusi`;
+                    
+                    if (currentSingleId) {
+                        const item = simulatorHistory.find(x => x.id === currentSingleId);
+                        if (item) item.status = 'executed';
+                        renderHistory();
+                    }
                     showToast("Tindakan otomatis berhasil dieksekusi!");
                 }
             }, delay);
@@ -314,6 +435,12 @@ function executeActionSingle() {
             btn.classList.remove('loading');
             btn.classList.add('success');
             btn.innerHTML = `<i class="fas fa-check"></i> Dieksekusi`;
+            
+            if (currentSingleId) {
+                const item = simulatorHistory.find(x => x.id === currentSingleId);
+                if (item) item.status = 'executed';
+                renderHistory();
+            }
             showToast("Tindakan otomatis berhasil dieksekusi!");
         }, 1500 + Math.random() * 1000);
     }
@@ -379,6 +506,8 @@ async function processCSV(csvText) {
         try {
             const resultText = await callGeminiAPI(text);
             const data = JSON.parse(resultText);
+            
+            addToHistory(text, data);
             
             const escapeCSV = (str) => '"' + (str || '').replace(/"/g, '""') + '"';
             resultsCSV += `${escapeCSV(text)},${escapeCSV(data.determinan)},${escapeCSV(data.sentimen)},${escapeCSV(data.alasan_tersembunyi)},${escapeCSV(data.rekomendasi_aksi)}\n`;
