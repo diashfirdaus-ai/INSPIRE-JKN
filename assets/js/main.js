@@ -1,5 +1,5 @@
 // ============================================================
-// JKN LLM Analytics - Main JavaScript
+// Insight-JKN - Main JavaScript
 // Requires: config.js (for GEMINI_CONFIG)
 // ============================================================
 
