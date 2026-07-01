@@ -28,8 +28,9 @@
         <ul class="nav-links">
             <li><a onclick="showPage('home')"      id="nav-home"      class="active">Beranda</a></li>
             <li><a onclick="showPage('dashboard')" id="nav-dashboard">Dashboard</a></li>
+            <li><a onclick="showPage('simulator')" id="nav-simulator">Simulator</a></li>
             <li><a onclick="showPage('about')"     id="nav-about">Tentang Riset</a></li>
-            <li><a onclick="showPage('dashboard')" class="nav-cta"><i class="fas fa-bolt"></i> Coba Sekarang</a></li>
+            <li><a onclick="showPage('simulator')" class="nav-cta"><i class="fas fa-bolt"></i> Coba Sekarang</a></li>
         </ul>
     </div>
 </nav>
@@ -110,7 +111,7 @@
                                 <div class="slide-feature"><div class="slide-feature-icon"><i class="fas fa-check"></i></div>Klasifikasi: Ekonomi, Teknis, Gateway, Administratif</div>
                                 <div class="slide-feature"><div class="slide-feature-icon"><i class="fas fa-check"></i></div>Ekstraksi "latent reason" tersembunyi dari teks</div>
                             </div>
-                            <button class="btn-primary" onclick="showPage('dashboard')"><i class="fas fa-play"></i> Coba Simulator</button>
+                            <button class="btn-primary" onclick="showPage('simulator')"><i class="fas fa-play"></i> Coba Simulator</button>
                         </div>
                     </div>
                 </div>
@@ -342,58 +343,45 @@
             </div>
         </div>
 
-        <!-- LLM Simulator -->
-        <div class="llm-section">
-            <div class="llm-header">
-                <div class="llm-header-title">
-                    <div class="llm-header-icon"><i class="fas fa-robot"></i></div>
-                    Simulator Ekstraksi LLM Real-Time
-                </div>
-                <span class="powered-badge"><i class="fas fa-bolt"></i> Powered by Gemini AI</span>
-            </div>
-            <div class="llm-body">
-                <!-- Input -->
-                <div>
-                    <div class="llm-label">Input Teks Keluhan / Cuitan</div>
-                    <textarea id="llmInput" class="llm-textarea" rows="6" placeholder="Masukkan teks keluhan peserta JKN di sini..."></textarea>
-                    <div class="example-chips">
-                        <div class="example-chip" onclick="fillExample(1)"><i class="fas fa-tag"></i> Contoh 1 (Ekonomi/PHK)</div>
-                        <div class="example-chip" onclick="fillExample(2)"><i class="fas fa-tag"></i> Contoh 2 (Teknis Aplikasi)</div>
-                        <div class="example-chip" onclick="fillExample(3)"><i class="fas fa-tag"></i> Contoh 3 (Gateway Error)</div>
-                    </div>
-                    <button id="btnAnalyze" class="analyze-btn" onclick="analyzeText()">
-                        <i class="fas fa-bolt"></i> Analisis &amp; Ekstrak Insight
-                    </button>
-                    <div id="loadingIndicator" style="display:none;align-items:center;gap:10px;justify-content:center;margin-top:12px;color:var(--em600);font-size:0.875rem;font-weight:600;">
-                        <div class="loader-spin"></div> LLM sedang memproses teks...
-                    </div>
-                </div>
-                <!-- Output -->
-                <div style="position:relative;">
-                    <div class="llm-label">Hasil Ekstraksi &amp; Rekomendasi Aksi</div>
-                    <div id="resultOverlay" class="result-overlay">
-                        <div class="result-overlay-text">
-                            <i class="fas fa-wand-magic-sparkles"></i>
-                            <p style="font-size:0.875rem;">Klik Analisis untuk melihat<br>hasil ekstraksi LLM</p>
-                        </div>
-                    </div>
-                    <div class="result-grid">
-                        <div class="result-box"><div class="result-box-label">Kategori Determinan</div><div id="outDeterminan" class="result-box-value">—</div></div>
-                        <div class="result-box"><div class="result-box-label">Sentimen Pelanggan</div><div id="outSentimen" class="result-box-value">—</div></div>
-                    </div>
-                    <div class="result-box" style="margin-bottom:12px;"><div class="result-box-label">Alasan Tersembunyi (Latent Reason)</div><p id="outAlasan" style="font-size:0.875rem;color:var(--sl600);line-height:1.6;font-style:italic;margin-top:4px;">—</p></div>
-                    <div class="result-action-box">
-                        <div class="result-action-header"><div class="check-circle"><i class="fas fa-check"></i></div><span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#065f46;">Trigger Tindakan Otomatis</span></div>
-                        <p id="outRekomendasi" style="font-size:0.875rem;color:#065f46;font-weight:600;line-height:1.5;">—</p>
-                        <div id="actionBtnContainer" style="display:none;margin-top:12px;">
-                            <button style="background:var(--em600);color:white;border:none;padding:8px 16px;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;" onmouseover="this.style.background='var(--em700)'" onmouseout="this.style.background='var(--em600)'"><i class="fas fa-play"></i> Eksekusi Rekomendasi</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </section><!-- end #dashboard-page -->
+
+<!-- ============================================================ -->
+<!-- SIMULATOR PAGE                                                -->
+<!-- ============================================================ -->
+<section id="simulator-page" class="page-section">
+    <div class="dashboard-header">
+        <div class="dashboard-header-inner">
+            <div>
+                <h1 class="dashboard-title">Sistem Antrean Keluhan (Inbox)</h1>
+                <p class="dashboard-subtitle">Platform operasional CS dengan ekstraksi otomatis Gemini AI</p>
+            </div>
+            <button class="btn-primary" onclick="analyzeAll()" id="btnAnalyzeAll">
+                <i class="fas fa-bolt"></i> Analisis Semua (AI)
+            </button>
+        </div>
+    </div>
+
+    <div class="dashboard-body">
+        <div class="table-container">
+            <table class="data-table" id="complaintsTable">
+                <thead>
+                    <tr>
+                        <th width="5%">ID</th>
+                        <th width="10%">Sumber</th>
+                        <th width="35%">Teks Keluhan</th>
+                        <th width="15%">Status & Determinan</th>
+                        <th width="20%">Rekomendasi Aksi</th>
+                        <th width="15%">Tindakan</th>
+                    </tr>
+                </thead>
+                <tbody id="complaintsBody">
+                    <!-- Rows will be injected by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section><!-- end #simulator-page -->
 
 <!-- ============================================================ -->
 <!-- ABOUT / RESEARCH PAGE                                         -->
