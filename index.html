@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JKN LLM Analytics | Platform Deteksi Dini Penunggakan Iuran</title>
+    <meta name="description" content="Platform AI berbasis LLM untuk deteksi dini penunggakan iuran JKN/BPJS Kesehatan menggunakan analitik teks tidak terstruktur dari media sosial dan pengaduan publik.">
+
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Project Stylesheet -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- NAVIGATION                                                    -->
+<!-- ============================================================ -->
+<nav id="mainNav">
+    <div class="nav-inner">
+        <a class="nav-logo" onclick="showPage('home')">
+            <div class="nav-logo-icon"><i class="fas fa-leaf"></i></div>
+            <span class="nav-logo-text">JKN <span>Analytics</span></span>
+        </a>
+        <ul class="nav-links">
+            <li><a onclick="showPage('home')"      id="nav-home"      class="active">Beranda</a></li>
+            <li><a onclick="showPage('dashboard')" id="nav-dashboard">Dashboard</a></li>
+            <li><a onclick="showPage('about')"     id="nav-about">Tentang Riset</a></li>
+            <li><a onclick="showPage('dashboard')" class="nav-cta"><i class="fas fa-bolt"></i> Coba Sekarang</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- ============================================================ -->
+<!-- HOME PAGE                                                     -->
+<!-- ============================================================ -->
+<section id="home-page" class="page-section active">
+
+    <!-- HERO -->
+    <div class="hero-section">
+        <div class="hero-bg-particles">
+            <div class="hero-particle"></div>
+            <div class="hero-particle"></div>
+            <div class="hero-particle"></div>
+        </div>
+        <div class="hero-grid-lines"></div>
+        <div class="hero-content">
+            <div>
+                <div class="hero-badge"><div class="badge-dot"></div> Platform AI untuk JKN/BPJS Kesehatan</div>
+                <h1 class="hero-title">Deteksi Dini<br><span class="gradient-word">Penunggakan Iuran</span><br>dengan Kecerdasan AI</h1>
+                <p class="hero-subtitle">Menggunakan Large Language Model (LLM) untuk mengekstrak faktor determinan dari teks tidak terstruktur — media sosial dan pengaduan — guna mencegah penunggakan iuran JKN sebelum terjadi.</p>
+                <div class="hero-buttons">
+                    <button class="btn-primary"   onclick="showPage('dashboard')"><i class="fas fa-rocket"></i> Lihat Dashboard</button>
+                    <button class="btn-secondary" onclick="showPage('about')"><i class="fas fa-book-open"></i> Baca Riset</button>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-number">12.4K</div>
+                        <div class="hero-stat-label">Teks Dianalisis</div>
+                    </div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-number">94.2%</div>
+                        <div class="hero-stat-label">Akurasi Model</div>
+                    </div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-number">Rp2.4M</div>
+                        <div class="hero-stat-label">Potensi Pemulihan</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image-container">
+                <div class="floating-card floating-card-1">
+                    <div class="float-icon green"><i class="fas fa-brain"></i></div>
+                    <div><div class="float-text-main">LLM Aktif</div><div class="float-text-sub">Gemini AI Model</div></div>
+                </div>
+                <div class="hero-image-wrapper">
+                    <img src="assets/images/hero_illustration.png" alt="JKN AI Analytics Platform">
+                    <div class="hero-image-overlay"></div>
+                </div>
+                <div class="floating-card floating-card-2">
+                    <div class="float-icon blue"><i class="fas fa-chart-line"></i></div>
+                    <div><div class="float-text-main">EWS Aktif</div><div class="float-text-sub">Early Warning System</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURE SLIDER -->
+    <div class="slider-section">
+        <div class="section-label">Fitur Unggulan</div>
+        <h2 class="section-title">Teknologi yang Mengubah<br>Cara BPJS Bekerja</h2>
+        <p class="section-subtitle">Dari data mentah tidak terstruktur menjadi insight yang dapat ditindaklanjuti secara real-time</p>
+        <div class="slider-container">
+            <div class="slider-track" id="sliderTrack">
+                <!-- Slide 1 -->
+                <div class="slide">
+                    <div class="slide-inner">
+                        <div class="slide-image"><img src="assets/images/hero_illustration.png" alt="LLM Extraction"></div>
+                        <div>
+                            <div class="slide-badge"><i class="fas fa-brain"></i> Fitur 01</div>
+                            <h3 class="slide-title">Mesin Ekstraksi LLM Real-Time</h3>
+                            <p class="slide-text">Sistem secara otomatis memindai ribuan cuitan Twitter, laporan di platform LAPOR!, dan ulasan aplikasi JKN untuk mengidentifikasi sinyal-sinyal awal penunggakan iuran.</p>
+                            <div class="slide-features">
+                                <div class="slide-feature"><div class="slide-feature-icon"><i class="fas fa-check"></i></div>Analisis sentimen multi-label secara otomatis</div>
+                                <div class="slide-feature"><div class="slide-feature-icon"><i class="fas fa-check"></i></div>Klasifikasi: Ekonomi, Teknis, Gateway, Administratif</div>
+                                <div class="slide-feature"><div class="slide-feature-icon"><i class="fas fa-check"></i></div>Ekstraksi "latent reason" tersembunyi dari teks</div>
+                            </div>
+                            <button class="btn-primary" onclick="showPage('dashboard')"><i class="fas fa-play"></i> Coba Simulator</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="slide">
+                    <div class="slide-inner">
+                        <div class="slide-image"><img src="assets/images/ai_analytics.png" alt="Early Warning System"></div>
+                        <div>
+                            <div class="slide-badge"><i class="fas fa-bell"></i> Fitur 02</div>
+                            <h3 class="slide-title">Early Warning System (EWS) Berbasis Data</h3>
+                            <p class="slide-text">Dashboard interaktif yang menampilkan tren lonjakan keluhan secara harian. Sistem otomatis memberi notifikasi ketika volume keluhan melebihi ambang batas kritis.</p>
+                            <div class="slide-features">
+                                <div class="slide-feature"><div class="slide-feature-icon"><i class="fas fa-check"></i></div>Visualisasi tren temporal per kategori determinan</div>
+                                <div class="slide-feature"><div class="slide-feature-icon"><i class="fas fa-check"></i></div>Threshold alert otomatis ke tim operasional</div>
+                                <div class="slide-feature"><div class="slide-feature-icon"><i class="fas fa-check"></i></div>Integrasi dengan sistem BPJS existing</div>
+                            </div>
+                            <button class="btn-primary" onclick="showPage('dashboard')"><i class="fas fa-chart-bar"></i> Lihat Dashboard</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 3 -->
+                <div class="slide">
+                    <div class="slide-inner">
+                        <div class="slide-image"><img src="assets/images/impact_stats.png" alt="Automated Action"></div>
+                        <div>
+                            <div class="slide-badge"><i class="fas fa-bolt"></i> Fitur 03</div>
+                            <h3 class="slide-title">Trigger Aksi Otomatis &amp; Intervensi Cerdas</h3>
+                            <p class="slide-text">Setiap keluhan yang teranalisis memicu rekomendasi aksi otomatis yang dipersonalisasi. Masalah ekonomi mendapat WA Blast program REHAB; masalah teknis menghasilkan tiket IT otomatis.</p>
+                            <div class="slide-features">
+                                <div class="slide-feature"><div class="slide-feature-icon"><i class="fas fa-check"></i></div>Integrasi WhatsApp Blast program REHAB BPJS</div>
+                                <div class="slide-feature"><div class="slide-feature-icon"><i class="fas fa-check"></i></div>Auto-generate tiket helpdesk IT Support</div>
+                                <div class="slide-feature"><div class="slide-feature-icon"><i class="fas fa-check"></i></div>Estimasi potensi pemulihan iuran per intervensi</div>
+                            </div>
+                            <button class="btn-primary" onclick="showPage('about')"><i class="fas fa-info-circle"></i> Tentang Riset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Slider Controls -->
+            <div class="slider-controls">
+                <button class="slider-btn" onclick="moveSlider(-1)"><i class="fas fa-chevron-left"></i></button>
+                <div class="slider-dots">
+                    <div class="slider-dot active" onclick="goToSlide(0)"></div>
+                    <div class="slider-dot"        onclick="goToSlide(1)"></div>
+                    <div class="slider-dot"        onclick="goToSlide(2)"></div>
+                </div>
+                <button class="slider-btn" onclick="moveSlider(1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FEATURES GRID -->
+    <div class="features-section">
+        <div class="section-label">Kemampuan Platform</div>
+        <h2 class="section-title">Solusi Lengkap untuk<br>Manajemen Iuran JKN</h2>
+        <p class="section-subtitle">Dibangun di atas fondasi penelitian ilmiah dan teknologi AI terkini</p>
+        <div class="features-grid">
+            <div class="feature-card animate-on-scroll"><div class="feature-icon-wrap green"><i class="fas fa-brain"></i></div><h3 class="feature-title">LLM Text Mining</h3><p class="feature-text">Menggunakan Gemini AI untuk memahami konteks dan nuansa bahasa Indonesia dalam keluhan peserta JKN dengan akurasi tinggi.</p></div>
+            <div class="feature-card animate-on-scroll"><div class="feature-icon-wrap blue"><i class="fas fa-comments"></i></div><h3 class="feature-title">Multi-Source Data</h3><p class="feature-text">Mengintegrasikan data dari Twitter/X, platform LAPOR!, App Store Reviews, dan saluran pengaduan resmi BPJS secara bersamaan.</p></div>
+            <div class="feature-card animate-on-scroll"><div class="feature-icon-wrap purple"><i class="fas fa-shield-alt"></i></div><h3 class="feature-title">Deteksi Dini Churn</h3><p class="feature-text">Mengidentifikasi peserta yang berisiko tinggi menonaktifkan kepesertaan sebelum tunggakan terjadi dengan presisi 94.2%.</p></div>
+            <div class="feature-card animate-on-scroll"><div class="feature-icon-wrap amber"><i class="fas fa-bell"></i></div><h3 class="feature-title">Early Warning System</h3><p class="feature-text">Sistem peringatan dini berbasis threshold yang otomatis mengirim notifikasi ke tim operasional ketika tren keluhan melonjak.</p></div>
+            <div class="feature-card animate-on-scroll"><div class="feature-icon-wrap rose"><i class="fas fa-robot"></i></div><h3 class="feature-title">Automated Action</h3><p class="feature-text">Setiap insight yang diekstrak secara otomatis memicu tindakan yang tepat — dari WA Blast hingga tiket helpdesk — tanpa campur tangan manual.</p></div>
+            <div class="feature-card animate-on-scroll"><div class="feature-icon-wrap teal"><i class="fas fa-chart-pie"></i></div><h3 class="feature-title">Analitik Visual</h3><p class="feature-text">Dashboard interaktif dengan visualisasi data yang kaya — tren temporal, distribusi determinan, dan peta risiko geografis peserta.</p></div>
+        </div>
+    </div>
+
+    <!-- IMPACT STATS -->
+    <div class="impact-section">
+        <div class="impact-inner">
+            <div class="section-label" style="color:var(--em400);">Dampak Nyata</div>
+            <h2 class="section-title" style="color:white;">Angka yang Berbicara untuk<br>Keberlangsungan JKN</h2>
+            <p class="section-subtitle" style="color:rgba(255,255,255,0.5);">Data dari simulasi dan studi literatur tentang potensi dampak implementasi sistem ini</p>
+            <div class="impact-grid">
+                <div class="impact-card animate-on-scroll"><span class="impact-number" id="counter-1">0</span><div class="impact-label">Teks Teranalisis/Bulan</div><div class="impact-sublabel">dari berbagai sumber data</div></div>
+                <div class="impact-card animate-on-scroll"><span class="impact-number" id="counter-2">0%</span><div class="impact-label">Akurasi Klasifikasi</div><div class="impact-sublabel">LLM pada uji validasi</div></div>
+                <div class="impact-card animate-on-scroll"><span class="impact-number" id="counter-3">0</span><div class="impact-label">Peserta Risiko Terdeteksi</div><div class="impact-sublabel">berpotensi churn per bulan</div></div>
+                <div class="impact-card animate-on-scroll"><span class="impact-number" id="counter-4">Rp0</span><div class="impact-label">Potensi Pemulihan Iuran</div><div class="impact-sublabel">estimasi via intervensi AI</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TESTIMONIALS (Auto-scroll) -->
+    <div class="testimonial-section">
+        <div class="section-label">Validasi &amp; Insight</div>
+        <h2 class="section-title">Didukung Riset &amp; Data Lapangan</h2>
+        <p class="section-subtitle">Insight yang ditemukan dari analisis teks nyata peserta JKN — hover untuk pause</p>
+        <div class="testimonial-slider">
+            <div class="testimonial-track">
+                <div class="testimonial-card"><div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-quote">Suami baru kena PHK bulan lalu, jadi bulan ini sekeluarga terpaksa nunggak BPJS dulu karena buat makan aja susah. Mohon pengertiannya.</p><div class="testimonial-author"><div class="testimonial-avatar av-green">D</div><div><div class="testimonial-name">Deteksi: Ekonomi/PHK</div><div class="testimonial-role">Trigger: WA Blast Program REHAB</div></div></div></div>
+                <div class="testimonial-card"><div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-quote">Tolong dong aplikasi mobile JKN diperbaiki! Saya mau bayar tunggakan malah muter-muter aja di halaman login. Ribet banget antarmukanya bikin pusing.</p><div class="testimonial-author"><div class="testimonial-avatar av-blue">T</div><div><div class="testimonial-name">Deteksi: Teknis/Aplikasi</div><div class="testimonial-role">Trigger: Tiket IT Support Otomatis</div></div></div></div>
+                <div class="testimonial-card"><div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div><p class="testimonial-quote">Udah 3 hari coba bayar lewat m-banking selalu gagal di gateway. Padahal lagi butuh buat berobat. Kalau gini mending ga usah bayar aja.</p><div class="testimonial-author"><div class="testimonial-avatar av-amber">G</div><div><div class="testimonial-name">Deteksi: Gateway Pembayaran</div><div class="testimonial-role">Trigger: Laporan ke Tim Fintech</div></div></div></div>
+                <div class="testimonial-card"><div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-quote">Saya sudah 5 bulan tidak membayar iuran karena lupa dan tidak ada yang mengingatkan. Baru tahu kalau ada program cicilan yang bisa membantu.</p><div class="testimonial-author"><div class="testimonial-avatar av-rose">L</div><div><div class="testimonial-name">Deteksi: Administratif/Lupa</div><div class="testimonial-role">Trigger: Push Notif Reminder Otomatis</div></div></div></div>
+                <div class="testimonial-card"><div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-quote">Usaha saya tutup karena pandemi, mau bayar BPJS tapi tabungan sudah habis. Apakah ada program subsidi untuk peserta mandiri yang terdampak?</p><div class="testimonial-author"><div class="testimonial-avatar av-green">U</div><div><div class="testimonial-name">Deteksi: Ekonomi/Usaha Kolaps</div><div class="testimonial-role">Trigger: Info Beasiswa PBI Otomatis</div></div></div></div>
+                <!-- Duplicate cards for seamless infinite loop -->
+                <div class="testimonial-card"><div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-quote">Suami baru kena PHK bulan lalu, jadi bulan ini sekeluarga terpaksa nunggak BPJS dulu karena buat makan aja susah. Mohon pengertiannya.</p><div class="testimonial-author"><div class="testimonial-avatar av-green">D</div><div><div class="testimonial-name">Deteksi: Ekonomi/PHK</div><div class="testimonial-role">Trigger: WA Blast Program REHAB</div></div></div></div>
+                <div class="testimonial-card"><div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-quote">Tolong dong aplikasi mobile JKN diperbaiki! Saya mau bayar tunggakan malah muter-muter aja di halaman login. Ribet banget antarmukanya bikin pusing.</p><div class="testimonial-author"><div class="testimonial-avatar av-blue">T</div><div><div class="testimonial-name">Deteksi: Teknis/Aplikasi</div><div class="testimonial-role">Trigger: Tiket IT Support Otomatis</div></div></div></div>
+                <div class="testimonial-card"><div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div><p class="testimonial-quote">Udah 3 hari coba bayar lewat m-banking selalu gagal di gateway. Padahal lagi butuh buat berobat. Kalau gini mending ga usah bayar aja.</p><div class="testimonial-author"><div class="testimonial-avatar av-amber">G</div><div><div class="testimonial-name">Deteksi: Gateway Pembayaran</div><div class="testimonial-role">Trigger: Laporan ke Tim Fintech</div></div></div></div>
+                <div class="testimonial-card"><div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-quote">Saya sudah 5 bulan tidak membayar iuran karena lupa dan tidak ada yang mengingatkan. Baru tahu kalau ada program cicilan yang bisa membantu.</p><div class="testimonial-author"><div class="testimonial-avatar av-rose">L</div><div><div class="testimonial-name">Deteksi: Administratif/Lupa</div><div class="testimonial-role">Trigger: Push Notif Reminder Otomatis</div></div></div></div>
+                <div class="testimonial-card"><div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="testimonial-quote">Usaha saya tutup karena pandemi, mau bayar BPJS tapi tabungan sudah habis. Apakah ada program subsidi untuk peserta mandiri yang terdampak?</p><div class="testimonial-author"><div class="testimonial-avatar av-green">U</div><div><div class="testimonial-name">Deteksi: Ekonomi/Usaha Kolaps</div><div class="testimonial-role">Trigger: Info Beasiswa PBI Otomatis</div></div></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TECH MARQUEE -->
+    <div class="tech-section">
+        <div class="section-label" style="margin-bottom:36px;">Ditenagai Teknologi Terkini</div>
+        <div style="overflow:hidden;">
+            <div class="tech-logos">
+                <div class="tech-item"><i class="fas fa-brain" style="color:#4285f4;"></i> Google Gemini AI</div>
+                <div class="tech-item"><i class="fab fa-python" style="color:#3776ab;"></i> Python NLP</div>
+                <div class="tech-item"><i class="fas fa-chart-bar" style="color:#10b981;"></i> Chart.js Analytics</div>
+                <div class="tech-item"><i class="fab fa-twitter" style="color:#1da1f2;"></i> Twitter API v2</div>
+                <div class="tech-item"><i class="fas fa-database" style="color:#f59e0b;"></i> Big Data Pipeline</div>
+                <div class="tech-item"><i class="fas fa-robot" style="color:#6366f1;"></i> Transformer LLM</div>
+                <div class="tech-item"><i class="fas fa-shield-alt" style="color:#059669;"></i> BPJS API</div>
+                <div class="tech-item"><i class="fas fa-mobile-alt" style="color:#f43f5e;"></i> WhatsApp Business API</div>
+                <!-- Duplicate for seamless loop -->
+                <div class="tech-item"><i class="fas fa-brain" style="color:#4285f4;"></i> Google Gemini AI</div>
+                <div class="tech-item"><i class="fab fa-python" style="color:#3776ab;"></i> Python NLP</div>
+                <div class="tech-item"><i class="fas fa-chart-bar" style="color:#10b981;"></i> Chart.js Analytics</div>
+                <div class="tech-item"><i class="fab fa-twitter" style="color:#1da1f2;"></i> Twitter API v2</div>
+                <div class="tech-item"><i class="fas fa-database" style="color:#f59e0b;"></i> Big Data Pipeline</div>
+                <div class="tech-item"><i class="fas fa-robot" style="color:#6366f1;"></i> Transformer LLM</div>
+                <div class="tech-item"><i class="fas fa-shield-alt" style="color:#059669;"></i> BPJS API</div>
+                <div class="tech-item"><i class="fas fa-mobile-alt" style="color:#f43f5e;"></i> WhatsApp Business API</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-top">
+                <div>
+                    <div class="footer-logo"><div class="footer-logo-icon"><i class="fas fa-leaf"></i></div><span class="footer-logo-text">JKN LLM Analytics</span></div>
+                    <p class="footer-desc">Platform deteksi dini penunggakan iuran JKN berbasis AI/LLM. Dibangun untuk mendukung keberlanjutan sistem Jaminan Kesehatan Nasional Indonesia.</p>
+                </div>
+                <div>
+                    <div class="footer-col-title">Platform</div>
+                    <ul class="footer-links">
+                        <li><a onclick="showPage('home')">Beranda</a></li>
+                        <li><a onclick="showPage('dashboard')">Dashboard</a></li>
+                        <li><a onclick="showPage('about')">Tentang Riset</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Teknologi</div>
+                    <ul class="footer-links">
+                        <li><a>Google Gemini AI</a></li>
+                        <li><a>LLM Text Mining</a></li>
+                        <li><a>NLP Pipeline</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">Referensi</div>
+                    <ul class="footer-links">
+                        <li><a>Jurnal Kesehatan UI</a></li>
+                        <li><a>Data BPJS Kesehatan</a></li>
+                        <li><a>WHO Health Coverage</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2025 JKN LLM Analytics Platform. Untuk keperluan penelitian.</span>
+                <div class="footer-bottom-badges">
+                    <div class="footer-badge"><i class="fas fa-check-circle"></i> Divalidasi Expert</div>
+                    <div class="footer-badge"><i class="fas fa-book"></i> Berbasis Jurnal Nasional &amp; Internasional</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</section><!-- end #home-page -->
+
+<!-- ============================================================ -->
+<!-- DASHBOARD PAGE                                                -->
+<!-- ============================================================ -->
+<section id="dashboard-page" class="page-section">
+    <div class="dashboard-header">
+        <div class="dashboard-header-inner">
+            <div>
+                <h1 class="dashboard-title">Dashboard Analitik JKN</h1>
+                <p class="dashboard-subtitle">Deteksi dini penunggakan iuran via ekstraksi LLM dari teks tidak terstruktur</p>
+            </div>
+            <div class="live-badge"><div class="live-dot"></div> Data Simulasi Real-Time</div>
+        </div>
+    </div>
+
+    <div class="dashboard-body">
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-bg-circle kpi-bg-blue"></div>
+                <div class="kpi-header"><span class="kpi-label">Total Teks Dianalisis</span><div class="kpi-icon blue"><i class="fas fa-comments"></i></div></div>
+                <div class="kpi-value">12,450</div>
+                <div class="kpi-trend up"><i class="fas fa-arrow-up"></i> +12.3% vs bulan lalu</div>
+                <div class="kpi-note">Dari Twitter, LAPOR!, App Store</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-bg-circle kpi-bg-rose"></div>
+                <div class="kpi-header"><span class="kpi-label">Risiko Churn Tinggi</span><div class="kpi-icon rose"><i class="fas fa-user-times"></i></div></div>
+                <div class="kpi-value">3,120</div>
+                <div class="kpi-trend rose"><i class="fas fa-arrow-up"></i> +5% perlu intervensi</div>
+                <div class="kpi-note">Peserta berpotensi nonaktif</div>
+            </div>
+            <div class="kpi-card kpi-featured">
+                <div class="kpi-header"><span class="kpi-label">Potensi Pemulihan Iuran</span><div class="kpi-icon" style="background:rgba(255,255,255,0.2);color:white;"><i class="fas fa-wallet"></i></div></div>
+                <div class="kpi-value">Rp 2.45M</div>
+                <div class="kpi-trend" style="color:rgba(255,255,255,0.75);"><i class="fas fa-star"></i> Estimasi via intervensi AI</div>
+                <div class="kpi-note">Dana terselamatkan bulan ini</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title"><i class="fas fa-chart-bar" style="color:var(--em500);margin-right:8px;"></i>Tren Lonjakan Keluhan (EWS)</h3>
+                    <span class="chart-tag">7 Hari Terakhir</span>
+                </div>
+                <div class="chart-canvas-wrap"><canvas id="trendChart"></canvas></div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title"><i class="fas fa-chart-pie" style="color:var(--bl500);margin-right:8px;"></i>Faktor Determinan Penunggakan</h3>
+                    <span class="chart-tag">Distribusi</span>
+                </div>
+                <div class="chart-canvas-wrap" style="display:flex;justify-content:center;"><canvas id="factorChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- LLM Simulator -->
+        <div class="llm-section">
+            <div class="llm-header">
+                <div class="llm-header-title">
+                    <div class="llm-header-icon"><i class="fas fa-robot"></i></div>
+                    Simulator Ekstraksi LLM Real-Time
+                </div>
+                <span class="powered-badge"><i class="fas fa-bolt"></i> Powered by Gemini AI</span>
+            </div>
+            <div class="llm-body">
+                <!-- Input -->
+                <div>
+                    <div class="llm-label">Input Teks Keluhan / Cuitan</div>
+                    <textarea id="llmInput" class="llm-textarea" rows="6" placeholder="Masukkan teks keluhan peserta JKN di sini..."></textarea>
+                    <div class="example-chips">
+                        <div class="example-chip" onclick="fillExample(1)"><i class="fas fa-tag"></i> Contoh 1 (Ekonomi/PHK)</div>
+                        <div class="example-chip" onclick="fillExample(2)"><i class="fas fa-tag"></i> Contoh 2 (Teknis Aplikasi)</div>
+                        <div class="example-chip" onclick="fillExample(3)"><i class="fas fa-tag"></i> Contoh 3 (Gateway Error)</div>
+                    </div>
+                    <button id="btnAnalyze" class="analyze-btn" onclick="analyzeText()">
+                        <i class="fas fa-bolt"></i> Analisis &amp; Ekstrak Insight
+                    </button>
+                    <div id="loadingIndicator" style="display:none;align-items:center;gap:10px;justify-content:center;margin-top:12px;color:var(--em600);font-size:0.875rem;font-weight:600;">
+                        <div class="loader-spin"></div> LLM sedang memproses teks...
+                    </div>
+                </div>
+                <!-- Output -->
+                <div style="position:relative;">
+                    <div class="llm-label">Hasil Ekstraksi &amp; Rekomendasi Aksi</div>
+                    <div id="resultOverlay" class="result-overlay">
+                        <div class="result-overlay-text">
+                            <i class="fas fa-wand-magic-sparkles"></i>
+                            <p style="font-size:0.875rem;">Klik Analisis untuk melihat<br>hasil ekstraksi LLM</p>
+                        </div>
+                    </div>
+                    <div class="result-grid">
+                        <div class="result-box"><div class="result-box-label">Kategori Determinan</div><div id="outDeterminan" class="result-box-value">—</div></div>
+                        <div class="result-box"><div class="result-box-label">Sentimen Pelanggan</div><div id="outSentimen" class="result-box-value">—</div></div>
+                    </div>
+                    <div class="result-box" style="margin-bottom:12px;"><div class="result-box-label">Alasan Tersembunyi (Latent Reason)</div><p id="outAlasan" style="font-size:0.875rem;color:var(--sl600);line-height:1.6;font-style:italic;margin-top:4px;">—</p></div>
+                    <div class="result-action-box">
+                        <div class="result-action-header"><div class="check-circle"><i class="fas fa-check"></i></div><span style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#065f46;">Trigger Tindakan Otomatis</span></div>
+                        <p id="outRekomendasi" style="font-size:0.875rem;color:#065f46;font-weight:600;line-height:1.5;">—</p>
+                        <div id="actionBtnContainer" style="display:none;margin-top:12px;">
+                            <button style="background:var(--em600);color:white;border:none;padding:8px 16px;border-radius:8px;font-size:0.8rem;font-weight:600;cursor:pointer;" onmouseover="this.style.background='var(--em700)'" onmouseout="this.style.background='var(--em600)'"><i class="fas fa-play"></i> Eksekusi Rekomendasi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section><!-- end #dashboard-page -->
+
+<!-- ============================================================ -->
+<!-- ABOUT / RESEARCH PAGE                                         -->
+<!-- ============================================================ -->
+<section id="about-page" class="page-section">
+    <div class="about-hero">
+        <div class="about-hero-inner">
+            <div class="hero-badge" style="display:inline-flex;margin-bottom:20px;"><div class="badge-dot"></div> Riset Ilmiah</div>
+            <h1 class="hero-title" style="font-size:2.8rem;">Tentang Penelitian Ini</h1>
+            <p style="color:rgba(255,255,255,0.6);font-size:1rem;max-width:700px;margin:0 auto;line-height:1.75;">Mengeksplorasi penerapan Large Language Model (LLM) untuk mengidentifikasi faktor-faktor determinan penunggakan iuran JKN dari data teks tidak terstruktur yang tersebar di ruang publik digital.</p>
+        </div>
+    </div>
+    <div class="about-content">
+        <!-- Background -->
+        <div class="about-grid">
+            <div>
+                <div class="section-label" style="text-align:left;">Latar Belakang Masalah</div>
+                <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:2rem;font-weight:800;color:var(--sl900);margin-bottom:20px;line-height:1.3;">Tantangan Nyata yang<br>Dihadapi JKN Hari Ini</h2>
+                <p style="color:var(--sl600);line-height:1.8;margin-bottom:16px;font-size:0.95rem;">Program Jaminan Kesehatan Nasional (JKN) menghadapi tantangan krusial: tingginya angka penunggakan iuran peserta mandiri yang mengancam keberlanjutan finansial sistem. Data BPJS Kesehatan menunjukkan jutaan peserta aktif berstatus penunggak setiap bulannya.</p>
+                <p style="color:var(--sl600);line-height:1.8;margin-bottom:24px;font-size:0.95rem;">Pendekatan konvensional berfokus pada data terstruktur dan bersifat reaktif. Penelitian ini mengusulkan pendekatan <strong>proaktif</strong> menggunakan LLM untuk mendeteksi sinyal awal dari percakapan online.</p>
+                <div style="display:flex;flex-direction:column;gap:16px;">
+                    <div style="display:flex;gap:16px;align-items:flex-start;"><div style="width:40px;height:40px;background:var(--em100);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--em600);flex-shrink:0;"><i class="fas fa-search"></i></div><div><div style="font-weight:700;color:var(--sl800);margin-bottom:4px;">Research Question</div><div style="font-size:0.875rem;color:var(--sl600);">Bagaimana LLM dapat digunakan untuk mengekstrak faktor determinan penunggakan iuran JKN dari data teks tidak terstruktur?</div></div></div>
+                    <div style="display:flex;gap:16px;align-items:flex-start;"><div style="width:40px;height:40px;background:#dbeafe;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--bl600);flex-shrink:0;"><i class="fas fa-lightbulb"></i></div><div><div style="font-weight:700;color:var(--sl800);margin-bottom:4px;">Hipotesis Utama</div><div style="font-size:0.875rem;color:var(--sl600);">LLM mampu mengklasifikasikan determinan penunggakan dengan akurasi &gt;90% pada data teks bahasa Indonesia yang tidak terstruktur.</div></div></div>
+                </div>
+            </div>
+            <div><img src="assets/images/impact_stats.png" alt="Impact Statistics" style="width:100%;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.12);"></div>
+        </div>
+
+        <!-- Methodology -->
+        <div style="margin-bottom:60px;">
+            <div class="section-label" style="text-align:left;margin-bottom:12px;">Metodologi Penelitian</div>
+            <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.8rem;font-weight:800;color:var(--sl900);margin-bottom:40px;">Framework 4-Tahap Penelitian</h2>
+            <div class="method-grid">
+                <div class="method-card"><div style="width:52px;height:52px;background:linear-gradient(135deg,var(--em500),var(--tl600));border-radius:14px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;margin:0 auto 16px;"><i class="fas fa-database"></i></div><div style="font-weight:700;color:var(--sl900);margin-bottom:8px;">01. Data Collection</div><div style="font-size:0.8rem;color:var(--sl500);">Scraping Twitter, LAPOR!, dan App Reviews terkait JKN/BPJS</div></div>
+                <div class="method-card"><div style="width:52px;height:52px;background:linear-gradient(135deg,var(--bl500),var(--in600));border-radius:14px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;margin:0 auto 16px;"><i class="fas fa-tags"></i></div><div style="font-weight:700;color:var(--sl900);margin-bottom:8px;">02. Annotation</div><div style="font-size:0.8rem;color:var(--sl500);">Pelabelan manual oleh pakar bidang kesehatan &amp; kebijakan publik</div></div>
+                <div class="method-card"><div style="width:52px;height:52px;background:linear-gradient(135deg,var(--in500),#7c3aed);border-radius:14px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;margin:0 auto 16px;"><i class="fas fa-brain"></i></div><div style="font-weight:700;color:var(--sl900);margin-bottom:8px;">03. LLM Extraction</div><div style="font-size:0.8rem;color:var(--sl500);">Prompt engineering pada Gemini AI untuk zero-shot classification</div></div>
+                <div class="method-card"><div style="width:52px;height:52px;background:linear-gradient(135deg,var(--am400),#f97316);border-radius:14px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;margin:0 auto 16px;"><i class="fas fa-chart-line"></i></div><div style="font-weight:700;color:var(--sl900);margin-bottom:8px;">04. Validation</div><div style="font-size:0.8rem;color:var(--sl500);">Evaluasi akurasi model vs. anotasi pakar &amp; uji statistik</div></div>
+            </div>
+        </div>
+
+        <!-- Research References -->
+        <div>
+            <div class="section-label" style="text-align:left;margin-bottom:12px;">Landasan Ilmiah</div>
+            <h2 style="font-family:'Plus Jakarta Sans',sans-serif;font-size:1.8rem;font-weight:800;color:var(--sl900);margin-bottom:28px;">Referensi Jurnal Utama</h2>
+            <div class="research-cards">
+                <div class="research-card"><div style="width:40px;height:40px;background:var(--em100);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--em600);margin-bottom:16px;"><i class="fas fa-book"></i></div><div style="font-size:0.7rem;font-weight:700;color:var(--em600);margin-bottom:6px;">JURNAL NASIONAL</div><div style="font-weight:700;color:var(--sl800);font-size:0.875rem;margin-bottom:8px;line-height:1.4;">Determinan Iuran JKN Peserta Mandiri: Tinjauan Sistematis</div><div style="font-size:0.75rem;color:var(--sl400);">Jurnal Kesehatan Masyarakat Indonesia, 2023</div></div>
+                <div class="research-card"><div style="width:40px;height:40px;background:#dbeafe;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--bl600);margin-bottom:16px;"><i class="fas fa-book"></i></div><div style="font-size:0.7rem;font-weight:700;color:var(--bl600);margin-bottom:6px;">JURNAL INTERNASIONAL</div><div style="font-weight:700;color:var(--sl800);font-size:0.875rem;margin-bottom:8px;line-height:1.4;">LLM for Healthcare Text Classification: A Systematic Review</div><div style="font-size:0.75rem;color:var(--sl400);">Journal of Medical Internet Research, 2024</div></div>
+                <div class="research-card"><div style="width:40px;height:40px;background:#ede9fe;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--in600);margin-bottom:16px;"><i class="fas fa-book"></i></div><div style="font-size:0.7rem;font-weight:700;color:var(--in600);margin-bottom:6px;">JURNAL INTERNASIONAL</div><div style="font-weight:700;color:var(--sl800);font-size:0.875rem;margin-bottom:8px;line-height:1.4;">Social Media Mining for Public Health Insurance Insights</div><div style="font-size:0.75rem;color:var(--sl400);">Health Informatics Journal, 2023</div></div>
+            </div>
+        </div>
+    </div>
+</section><!-- end #about-page -->
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"><i class="fas fa-info-circle" style="color:var(--em400);"></i><span id="toast-msg"></span></div>
+
+<!-- ============================================================ -->
+<!-- SCRIPTS                                                       -->
+<!-- Load config.js first (API Key), then main.js                 -->
+<!-- ============================================================ -->
+<script src="config.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
