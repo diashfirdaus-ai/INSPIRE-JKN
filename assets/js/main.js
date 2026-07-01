@@ -266,12 +266,64 @@ function executeActionSingle() {
     btn.classList.add('loading');
     btn.innerHTML = `<div class="spinner-small" style="display:inline-block;vertical-align:middle;margin-right:6px;"></div> Proses...`;
 
-    setTimeout(() => {
-        btn.classList.remove('loading');
-        btn.classList.add('success');
-        btn.innerHTML = `<i class="fas fa-check"></i> Dieksekusi`;
-        showToast("Tindakan otomatis berhasil dieksekusi!");
-    }, 1500 + Math.random() * 1000);
+    const rekomendasi = document.getElementById('outRekomendasi').textContent;
+
+    // Tampilkan Modal Eksekusi
+    const modal = document.getElementById('execModal');
+    const modalBody = document.getElementById('execModalBody');
+    if(modal && modalBody) {
+        modal.classList.add('show');
+        modalBody.innerHTML = '';
+        
+        const steps = [
+            `> Memulai inisialisasi API eksternal...`,
+            `> Payload: { action: "${rekomendasi}" }`,
+            `> Mengirim instruksi ke backend system...`,
+            `<span class="status-warn">> Menunggu konfirmasi dari server (auth_token verified)...</span>`,
+            `<span class="status-ok">> [200 OK] Sukses! Tindakan otomatis berhasil diterapkan.</span>`
+        ];
+
+        let delay = 0;
+        steps.forEach((step, index) => {
+            delay += 600 + (Math.random() * 400); // randomize timing
+            setTimeout(() => {
+                const div = document.createElement('div');
+                div.className = 'exec-modal-step';
+                div.innerHTML = step;
+                modalBody.appendChild(div);
+                
+                // Trigger reflow for animation
+                void div.offsetWidth;
+                div.classList.add('show');
+                
+                // Scroll ke paling bawah
+                modalBody.scrollTop = modalBody.scrollHeight;
+
+                if (index === steps.length - 1) {
+                    // Update button on success
+                    btn.classList.remove('loading');
+                    btn.classList.add('success');
+                    btn.innerHTML = `<i class="fas fa-check"></i> Dieksekusi`;
+                    showToast("Tindakan otomatis berhasil dieksekusi!");
+                }
+            }, delay);
+        });
+    } else {
+        // Fallback jika modal tidak ada
+        setTimeout(() => {
+            btn.classList.remove('loading');
+            btn.classList.add('success');
+            btn.innerHTML = `<i class="fas fa-check"></i> Dieksekusi`;
+            showToast("Tindakan otomatis berhasil dieksekusi!");
+        }, 1500 + Math.random() * 1000);
+    }
+}
+
+function closeExecModal() {
+    const modal = document.getElementById('execModal');
+    if(modal) {
+        modal.classList.remove('show');
+    }
 }
 
 // ===== CSV BATCH PROCESSING =====

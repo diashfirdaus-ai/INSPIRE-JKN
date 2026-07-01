@@ -473,6 +473,22 @@
     </div>
 </section><!-- end #about-page -->
 
+<!-- Execution Modal -->
+<div class="exec-modal" id="execModal">
+    <div class="exec-modal-content">
+        <div class="exec-modal-header">
+            <div class="exec-modal-title"><i class="fas fa-terminal" style="color:var(--em500);"></i> Terminal Eksekusi</div>
+            <button class="exec-modal-close" onclick="closeExecModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="exec-modal-body" id="execModalBody">
+            <!-- Steps injected here -->
+        </div>
+        <div class="exec-modal-footer">
+            <button class="btn-secondary" onclick="closeExecModal()" style="border-radius:8px; padding:8px 16px; font-size:0.85rem; border:1px solid var(--sl200); color:var(--sl600); background:white;">Tutup</button>
+        </div>
+    </div>
+</div>
+
 <!-- Toast Notification -->
 <div class="toast" id="toast"><i class="fas fa-info-circle" style="color:var(--em400);"></i><span id="toast-msg"></span></div>
 

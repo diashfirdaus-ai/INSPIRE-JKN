@@ -246,6 +246,22 @@ footer{background:var(--sl900);color:rgba(255,255,255,0.6);padding:60px 0 32px;}
 .footer-badge{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);padding:5px 12px;border-radius:6px;font-size:0.75rem;}
 .footer-badge i{color:var(--em400);}
 
+/* ===== EXECUTION MODAL ===== */
+.exec-modal { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+.exec-modal.show { opacity: 1; pointer-events: auto; }
+.exec-modal-content { background: white; border-radius: 20px; width: 90%; max-width: 480px; box-shadow: 0 24px 60px rgba(0,0,0,0.2); overflow: hidden; transform: translateY(30px); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+.exec-modal.show .exec-modal-content { transform: translateY(0); }
+.exec-modal-header { padding: 20px 24px; border-bottom: 1px solid var(--sl200); display: flex; justify-content: space-between; align-items: center; background: var(--sl50); }
+.exec-modal-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--sl900); display: flex; align-items: center; gap: 10px; }
+.exec-modal-close { background: none; border: none; font-size: 1.2rem; color: var(--sl400); cursor: pointer; transition: color 0.2s; }
+.exec-modal-close:hover { color: var(--ro500); }
+.exec-modal-body { padding: 24px; font-family: monospace; background: #0f172a; color: #a5b4fc; min-height: 200px; font-size: 0.85rem; line-height: 1.6; }
+.exec-modal-step { margin-bottom: 8px; opacity: 0; transform: translateY(10px); transition: all 0.3s ease; }
+.exec-modal-step.show { opacity: 1; transform: translateY(0); }
+.exec-modal-step .status-ok { color: #34d399; font-weight: bold; }
+.exec-modal-step .status-warn { color: #fbbf24; }
+.exec-modal-footer { padding: 16px 24px; border-top: 1px solid var(--sl200); display: flex; justify-content: flex-end; }
+
 /* ===== TOAST ===== */
 .toast{position:fixed;bottom:24px;right:24px;background:var(--sl800);color:white;padding:14px 20px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.3);z-index:9999;display:flex;align-items:center;gap:10px;font-size:0.875rem;transform:translateY(80px);opacity:0;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);}
 .toast.show{transform:translateY(0);opacity:1;}
