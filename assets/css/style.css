@@ -286,6 +286,104 @@ footer{background:var(--sl900);color:rgba(255,255,255,0.6);padding:60px 0 32px;}
 .animate-on-scroll{opacity:0;transform:translateY(30px);transition:all 0.6s ease;}
 .animate-on-scroll.visible{opacity:1;transform:translateY(0);}
 
+/* ===== DATA TABLE ===== */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--sl200);
+    margin-top: 16px;
+}
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+.data-table th {
+    background: var(--sl50);
+    color: var(--sl700);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 16px 20px;
+    border-bottom: 2px solid var(--sl200);
+}
+.data-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--sl100);
+    color: var(--sl800);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    vertical-align: middle;
+}
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+.data-table tr {
+    transition: background-color 0.2s ease;
+}
+.data-table tr:hover {
+    background-color: rgba(16, 185, 129, 0.02);
+}
+
+/* Table badges */
+.badge-det {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+.badge-det-ekonomi {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+.badge-det-teknis {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+.badge-det-gateway {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+.badge-det-administratif {
+    background-color: #f3e8ff;
+    color: #6b21a8;
+}
+.badge-det-netral {
+    background-color: var(--sl100);
+    color: var(--sl700);
+}
+
+.badge-sent {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.badge-sent-negatif {
+    background-color: #fff1f2;
+    color: #be123c;
+}
+.badge-sent-positif {
+    background-color: #f0fdf4;
+    color: #15803d;
+}
+.badge-sent-netral {
+    background-color: var(--sl50);
+    color: var(--sl600);
+}
+
 /* ===== RESPONSIVE ===== */
 @media(max-width:1024px){
     .hero-content{grid-template-columns:1fr;text-align:center;}

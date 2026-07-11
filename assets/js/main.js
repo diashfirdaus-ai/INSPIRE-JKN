@@ -185,29 +185,37 @@ function renderHistory() {
     tbody.innerHTML = '';
     
     simulatorHistory.forEach(item => {
-        let detColor = 'var(--sl800)';
         const det = (item.determinan || '').toLowerCase();
-        if (det.includes('ekonomi')) detColor = '#dc2626';
-        else if (det.includes('teknis') || det.includes('aplikasi')) detColor = '#2563eb';
-        else if (det.includes('gateway')) detColor = '#d97706';
-        else if (det.includes('administ')) detColor = '#7c3aed';
+        let detClass = 'badge-det-netral';
+        if (det.includes('ekonomi')) detClass = 'badge-det-ekonomi';
+        else if (det.includes('teknis') || det.includes('aplikasi')) detClass = 'badge-det-teknis';
+        else if (det.includes('gateway')) detClass = 'badge-det-gateway';
+        else if (det.includes('administ')) detClass = 'badge-det-administratif';
 
         const s = (item.sentimen || '').toLowerCase();
-        const icon = s === 'negatif' ? '😞 ' : s === 'positif' ? '😊 ' : '😐 ';
+        let sentClass = 'badge-sent-netral';
+        let icon = '😐';
+        if (s === 'negatif') {
+            sentClass = 'badge-sent-negatif';
+            icon = '😞';
+        } else if (s === 'positif') {
+            sentClass = 'badge-sent-positif';
+            icon = '😊';
+        }
 
         let actionHtml = '';
         if (item.status === 'executed') {
             actionHtml = `<span style="display:inline-flex;align-items:center;gap:6px;color:#10b981;font-weight:600;font-size:0.8rem;"><i class="fas fa-check-circle"></i> Dieksekusi</span>`;
         } else {
-            actionHtml = `<button class="btn-execute" id="btn-hist-${item.id}" onclick="executeHistoryAction(${item.id}, '${(item.rekomendasi || '').replace(/'/g, "\\'")}')" style="padding:6px 12px;font-size:0.75rem;"><i class="fas fa-play"></i> Eksekusi</button>`;
+            actionHtml = `<button class="btn-execute" id="btn-hist-${item.id}" onclick="executeHistoryAction(${item.id}, '${(item.rekomendasi || '').replace(/'/g, "\\'")}')" style="padding:6px 12px;font-size:0.75rem;width:auto;"><i class="fas fa-play"></i> Eksekusi</button>`;
         }
 
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td style="font-size:0.8rem;">${item.text}</td>
-            <td><strong style="color:${detColor};font-size:0.8rem;">${item.determinan}</strong></td>
-            <td style="font-size:0.8rem;">${icon} ${item.sentimen}</td>
-            <td style="font-size:0.8rem;color:#065f46;">${item.rekomendasi}</td>
+            <td style="font-weight:500;">${item.text}</td>
+            <td><span class="badge-det ${detClass}">${item.determinan}</span></td>
+            <td><span class="badge-sent ${sentClass}">${icon} ${item.sentimen}</span></td>
+            <td style="font-weight:500;color:#047857;">${item.rekomendasi}</td>
             <td id="hist-action-${item.id}">${actionHtml}</td>
         `;
         tbody.appendChild(tr);
